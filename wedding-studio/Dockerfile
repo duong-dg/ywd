@@ -7,7 +7,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends git unzip libon
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 WORKDIR /var/www/html
 COPY . .
-RUN composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader \
+RUN find . -type d -exec chmod 755 {} + \
+    && find . -type f -exec chmod 644 {} + \
+    && composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader \
     && chown -R www-data:www-data storage bootstrap/cache public/uploads \
     && chmod -R ug+rwX storage bootstrap/cache public/uploads
 COPY deploy/apache.conf /etc/apache2/sites-available/000-default.conf
