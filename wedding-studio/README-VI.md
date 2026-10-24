@@ -59,7 +59,7 @@ php artisan test
 php artisan view:cache
 ```
 
-Đây là bản nền CMS để tiếp tục tùy biến. Chưa triển khai server thật và chưa xác minh SMTP production.
+Đây là bản nền CMS để tiếp tục tùy biến. Đã triển khai trên Ubuntu nội bộ. SMTP production cần nhập tài khoản thực và kiểm tra gửi mail.
 
 ## Blog & SEO nâng cao
 
@@ -76,3 +76,10 @@ php artisan view:cache
 - Ảnh MỚI tải lên được đổi WebP và thu về tối đa 2.000 px cạnh dài khi PHP có GD/WebP; xoay theo EXIF JPEG và bỏ metadata trong quá trình mã hóa. Giới hạn 24 megapixel để tránh giải mã ảnh quá lớn. Nếu máy không có GD hoặc không giải mã được định dạng (ví dụ AVIF tùy bản GD), giữ file gốc. Ảnh URL ngoài/ảnh cũ không tự chuyển đổi. Ảnh trong bài dùng lazy loading; ảnh local có thêm width/height khi đọc được kích thước.
 
 Cập nhật bản Blog/SEO lần đầu: sao lưu DB/ảnh/cấu hình, chạy php artisan migrate --force rồi php artisan db:seed --class=SeoSeeder --force và php artisan optimize. Seeder idempotent, không thay bài viết/cài đặt SEO đã có. Cài mới có thể dùng php artisan db:seed để chạy cả hai seeder; không tạo tài khoản quản trị mặc định.
+
+## SMTP, CSS/JS và menu sticky
+
+- Admin → Cài đặt → Email & SMTP: nhập host, cổng, STARTTLS/SSL, tài khoản, mật khẩu ứng dụng, email gửi/nhận; lưu rồi dùng Gửi email thử. Mật khẩu mã hóa bằng APP_KEY, không hiển thị lại; để trống giữ mật khẩu cũ. Khi chuyển hosting phải giữ APP_KEY. Cấu hình admin ưu tiên hơn .env; nếu chưa lưu tại admin thì dùng .env.
+- Admin → CSS & JavaScript: thêm file .css/.js UTF-8 tối đa 256 KB hoặc viết mã trực tiếp; sửa, sắp thứ tự, chọn vị trí JS đầu/cuối trang, bật/tắt hoặc xóa. CSS luôn ở đầu trang. File lưu trong database, chỉ chạy ngoài website. Khi chuyển hosting cần chuyển cả database. URL tự đổi phiên bản khi sửa mã.
+- Admin → Cài đặt → Giao diện: bật/tắt menu sticky, mặc định bật. Dòng khẩu hiệu tự co và xuống dòng trên điện thoại.
+- Form liên hệ luôn lưu lời nhắn trong admin ngay cả khi gửi mail lỗi. Nút thử báo SMTP đã chấp nhận thư, cần kiểm tra cả hộp thư rác.
