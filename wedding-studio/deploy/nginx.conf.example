@@ -1,0 +1,21 @@
+server {
+    listen 80;
+    server_name wedding.example.com;
+    root /var/www/wedding-studio/public;
+    index index.php;
+    charset utf-8;
+    client_max_body_size 40m;
+    location / { try_files $uri $uri/ /index.php?$query_string; }
+    location ~ ^/uploads/.*\.(php|phtml|phar)$ { deny all; }
+    location ~ ^/index\.php(/|$) {
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        # Match the installed PHP-FPM version.
+        fastcgi_pass unix:/run/php/php8.2-fpm.sock;
+        fastcgi_hide_header X-Powered-By;
+    }
+    location ~ \.php$ { return 404; }
+    location ~ /\.(?!well-known).* { deny all; }
+    location ~* \.(css|js|jpg|jpeg|png|webp|avif|woff2)$ { expires 7d; access_log off; }
+    # Add HTTPS using your certificate manager before production.
+}

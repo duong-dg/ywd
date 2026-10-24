@@ -1,0 +1,18 @@
+# Local setup tools and superseded prototype
+/tools/
+/archive/
+
+# Credentials, local databases, and runtime data
+**/.env
+**/.env.*
+!**/.env.example
+**/auth.json
+**/*.sqlite
+**/*.sqlite-*
+**/*.sqlite3
+**/*.log
+**/.phpunit.result.cache
+**/node_modules/
+**/vendor/
+.DS_Store
+Thumbs.db
