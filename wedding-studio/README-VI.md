@@ -60,3 +60,19 @@ php artisan view:cache
 ```
 
 Đây là bản nền CMS để tiếp tục tùy biến. Chưa triển khai server thật và chưa xác minh SMTP production.
+
+## Blog & SEO nâng cao
+
+- Blog tại /blog, bài tại /blog/{slug}; menu Blog được thêm bởi SeoSeeder. Quản lý trong admin → Blog. Có chuyên mục (nhập tên), tác giả, ảnh đại diện/alt, đoạn giới thiệu, Markdown, bản nháp, hẹn giờ và xem trước cho admin. Mục lục theo H2/H3, thời gian đọc và bài liên quan cùng chuyên mục được tạo tự động. Không cần cron/queue cho hẹn giờ: bài tự hiển thị khi đã đến thời gian cấu hình.
+- Dùng khóa dịch cho tiêu đề, đoạn giới thiệu, body, alt và các trường SEO như phần dịch hiện có. Chỉ bản dịch body đã có mới được khai báo hreflang; bản ngôn ngữ chưa dịch dùng canonical tiếng Việt và noindex. Không tự dịch bằng AI.
+- Mỗi bài/trang/đám cưới có tiêu đề SEO, mô tả, focus keyword, ảnh chia sẻ, canonical tùy chỉnh, noindex/nofollow. Focus keyword và checklist chỉ gợi ý biên tập; không phải meta keywords hoặc cam kết xếp hạng. Tiêu đề SEO/mô tả có thể dùng khóa dịch.
+- Admin → SEO tổng thể: tiêu đề/mô tả mặc định trang chủ và Blog, ảnh chia sẻ, logo, hồ sơ mạng xã hội, mã xác minh Google Search Console/Bing (chỉ token, không nhập toàn bộ thẻ HTML), bật/tắt lập chỉ mục.
+- Lập chỉ mục mặc định TẮT cho server nội bộ/dữ liệu mẫu. Thẻ noindex được gửi cả HTML lẫn X-Robots-Tag; robots.txt cho phép crawler đọc thẻ này. Sitemap sẽ trống khi chưa bật. Khi đã có domain công khai, HTTPS và nội dung thật: đổi APP_URL, tạo lại config cache, bật lập chỉ mục và gửi /sitemap.xml trong Search Console. Google không thể truy cập IP LAN.
+- Canonical tự loại tham số theo dõi. URL cũ dạng ?wedding= hoặc ?page= vẫn hoạt động, canonical trỏ URL sạch /weddings/{slug}, /pages/{slug}. Đổi slug tự tạo redirect 301; alias cũ luôn về slug mới nhất. Alias bị giữ chỗ để tránh tái sử dụng ngoài ý muốn, xóa trong admin nếu cần.
+- Admin → Redirect & lỗi 404: thêm 301/302 nội bộ, chống vòng lặp và gộp chuỗi redirect. Log chỉ giữ đường dẫn, số lượt và thời gian, không lưu query hoặc IP; giới hạn 1.000 đường dẫn và hiển thị 50 mục gần đây. Lỗi 404 phát hiện trước khi route vào ứng dụng (ví dụ web server) không được ghi ở đây.
+- /sitemap.xml tự chứa trang chủ, Blog và nội dung đã xuất bản/đến lịch, loại bản nháp, noindex, canonical sang nơi khác và bản chưa dịch. Tự chia sitemap khi quá 5.000 URL; lastmod lấy từ thời gian cập nhật thực tế. /robots.txt được tạo động.
+- Schema tự sinh Organization, WebSite, WebPage, BreadcrumbList và BlogPosting; không dùng Event schema cho đám cưới portfolio. OG/Twitter tags hỗ trợ ảnh chia sẻ. Kết quả hiển thị cuối cùng vẫn do công cụ tìm kiếm quyết định.
+- HTML tùy chỉnh ở trang nội dung vẫn là iframe sandbox như trước; nội dung đó không trở thành nội dung inline của trang cha. Để SEO nội dung dài, ưu tiên Blog hoặc trang văn bản theo theme.
+- Ảnh MỚI tải lên được đổi WebP và thu về tối đa 2.000 px cạnh dài khi PHP có GD/WebP; xoay theo EXIF JPEG và bỏ metadata trong quá trình mã hóa. Giới hạn 24 megapixel để tránh giải mã ảnh quá lớn. Nếu máy không có GD hoặc không giải mã được định dạng (ví dụ AVIF tùy bản GD), giữ file gốc. Ảnh URL ngoài/ảnh cũ không tự chuyển đổi. Ảnh trong bài dùng lazy loading; ảnh local có thêm width/height khi đọc được kích thước.
+
+Cập nhật bản Blog/SEO lần đầu: sao lưu DB/ảnh/cấu hình, chạy php artisan migrate --force rồi php artisan db:seed --class=SeoSeeder --force và php artisan optimize. Seeder idempotent, không thay bài viết/cài đặt SEO đã có. Cài mới có thể dùng php artisan db:seed để chạy cả hai seeder; không tạo tài khoản quản trị mặc định.

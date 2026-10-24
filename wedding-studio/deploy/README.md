@@ -49,3 +49,16 @@ sudo docker compose -p ywd ps
 ```
 
 APP_KEY và mật khẩu DB phải được giữ nguyên khi cập nhật. Các container tự chạy lại sau reboot nhờ restart: unless-stopped. Giữ cả Docker service ở trạng thái enabled.
+
+## Nâng cấp Blog/SEO
+
+Sau khi build image mới và trước khi thay app đang chạy:
+
+```sh
+sudo docker compose -p ywd run --rm --no-deps -u www-data app php artisan migrate --force
+sudo docker compose -p ywd run --rm --no-deps -u www-data app php artisan db:seed --class=SeoSeeder --force
+sudo docker compose -p ywd up -d app
+sudo docker compose -p ywd exec -u www-data app php artisan optimize
+```
+
+SEO mặc định không cho lập chỉ mục cho đến khi bật trong admin. Trang Blog và các cấu hình SEO đều lưu trong database và được giữ khi cập nhật. Không chạy seeder tạo tài khoản mẫu.
