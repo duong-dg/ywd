@@ -19,7 +19,7 @@ Mở http://127.0.0.1:8000 và http://127.0.0.1:8000/admin. Khi APP_ENV=local v�
 
 ## Quản trị
 
-- Đám cưới: tên, slug, địa điểm, ngày, phong cách, câu chuyện, ảnh bìa, album, theme, bản nháp/xuất bản. Upload JPG/PNG/WebP/AVIF, tối đa 8 MB/ảnh và 40 ảnh/lần, còn tùy giới hạn PHP. Nên nén WebP/AVIF trước khi upload; chưa tự chuyển đổi ảnh.
+- Đám cưới: tên, slug, địa điểm, ngày, phong cách, câu chuyện, ảnh bìa, album, theme, bản nháp/xuất bản. Upload JPG/PNG/WebP/AVIF, tối đa 8 MB/ảnh và 40 ảnh/lần, còn tùy giới hạn PHP. Ảnh mới tự tối ưu WebP khi server hỗ trợ GD, chi tiết tại phần Blog & SEO.
 - Trang: văn bản theo theme hoặc HTML tùy chỉnh. HTML trong iframe sandbox, không thực thi JavaScript, chiều cao cố định; nội dung tương tác cần lập trình theme riêng.
 - Menu: thêm/sửa/xóa, thứ tự số, tên, link và vị trí đầu trang/chân trang/cả hai. Trang: /?page=gioi-thieu. Link section: /#stories, /#about, /#contact.
 - Ngôn ngữ: tiếng Việt mặc định, thêm mã như en, fr, zh-cn; ẩn ngôn ngữ phụ khi chưa sẵn sàng.
@@ -50,7 +50,7 @@ Trong .env: MAIL_MAILER=smtp, nhập MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_P
 
 Sao lưu database MySQL (export SQL), public/uploads, theme, mã nguồn. Import SQL trên host mới; đổi DB/SMTP/APP_URL; giữ APP_KEY; chạy php artisan optimize:clear rồi php artisan optimize. Không commit .env, database và uploads vào Git.
 
-Ảnh mẫu dùng URL Unsplash, font dùng Google Fonts. Thay bằng ảnh được cấp quyền của bạn và lưu trên hosting trước khi ra mắt. Giao diện có lazy loading, CSS/IntersectionObserver và reduced motion. Chưa có CDN hoặc tự nén ảnh.
+Ảnh mẫu dùng URL Unsplash, font dùng Google Fonts. Thay bằng ảnh được cấp quyền của bạn và lưu trên hosting trước khi ra mắt. Giao diện có lazy loading, CSS/IntersectionObserver và reduced motion. Chưa có CDN. Ảnh mới upload được tối ưu khi server hỗ trợ GD.
 
 ## Kiểm tra
 

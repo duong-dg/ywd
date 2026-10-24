@@ -5,6 +5,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends git unzip libon
     && a2enmod rewrite headers \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
+# Keep WebP support in a separate layer so an existing PHP base can be reused.
+RUN apt-get update && apt-get install -y --no-install-recommends libwebp-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install -j2 gd \
+    && rm -rf /var/lib/apt/lists/*
 WORKDIR /var/www/html
 COPY . .
 RUN find . -type d -exec chmod 755 {} + \
