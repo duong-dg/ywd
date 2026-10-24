@@ -1,6 +1,7 @@
 version: '2.4'
 services:
   app:
+    image: ywd-studio:local
     build:
       context: ..
     restart: unless-stopped
