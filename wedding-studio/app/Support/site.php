@@ -19,3 +19,5 @@ function menuUrl(string $href): string {
  if(!str_starts_with($href,'/')||str_starts_with($href,'//'))return $href;
  $parts=explode('#',$href,2);return $parts[0].(str_contains($parts[0],'?')?'&':'?').'lang='.rawurlencode(app()->getLocale()).(isset($parts[1])?'#'.$parts[1]:'');
 }
+function versioned_asset(string $path): string {return $path.'?v='.substr(hash_file('sha256',public_path($path)),0,12);}
+function custom_asset_url(array $asset): string {return '/custom-assets/'.$asset['id'].'.'.$asset['kind'].'?v='.substr(hash('sha256',$asset['code']),0,12);}

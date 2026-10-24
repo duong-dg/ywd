@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 class AdminController extends Controller
 {
- const SECTIONS=['dashboard'=>'Tổng quan','post'=>'Blog','event'=>'Đám cưới','page'=>'Trang nội dung','seo'=>'SEO tổng thể','redirects'=>'Redirect & lỗi 404','menu'=>'Menu','translations'=>'Bản dịch','languages'=>'Ngôn ngữ','lead'=>'Liên hệ','settings'=>'Cài đặt'];
+ const SECTIONS=['dashboard'=>'Tổng quan','post'=>'Blog','event'=>'Đám cưới','page'=>'Trang nội dung','seo'=>'SEO tổng thể','redirects'=>'Redirect & lỗi 404','menu'=>'Menu','assets'=>'CSS & JavaScript','translations'=>'Bản dịch','languages'=>'Ngôn ngữ','lead'=>'Liên hệ','settings'=>'Cài đặt'];
  const FIELDS=[
   'post'=>['title'=>'Tiêu đề bài viết / khóa dịch','slug'=>'Đường dẫn (slug)','category'=>'Chuyên mục / khóa dịch','author'=>'Tác giả / khóa dịch','excerpt'=>'Đoạn giới thiệu / khóa dịch','cover'=>'Ảnh đại diện (URL hoặc tải lên)','cover_alt'=>'Mô tả alt ảnh đại diện / khóa dịch','body'=>'Nội dung Markdown / khóa dịch','publish_at'=>'Thời gian xuất bản (để trống: xuất bản ngay)','published'=>'Xuất bản'],
   'event'=>['title'=>'Tên cặp đôi / khóa dịch','slug'=>'Đường dẫn (slug)','category'=>'Phong cách / khóa dịch','location'=>'Địa điểm','date'=>'Ngày tổ chức','cover'=>'Ảnh bìa (URL hoặc tải ảnh bên dưới)','cover_alt'=>'Mô tả alt ảnh bìa / khóa dịch','story'=>'Câu chuyện / khóa dịch','gallery'=>'Album ảnh (mỗi dòng một URL)','gallery_alts'=>'Mô tả alt album (mỗi dòng ứng với một ảnh)','theme'=>'Theme','published'=>'Xuất bản','demo'=>'Nội dung minh họa'],
@@ -38,6 +38,7 @@ class AdminController extends Controller
    RateLimiter::clear($key);Auth::login($user);$request->session()->regenerate();return redirect('/admin');
   }
   abort_unless(Auth::check(),403);
+  if(in_array($action,['smtp_save','smtp_test','appearance_save','asset_save','asset_delete'],true))return app(SettingsController::class)->handle($request);
   if($action==='logout'){Auth::logout();$request->session()->invalidate();$request->session()->regenerateToken();return redirect('/admin');}
   if($action==='save'&&isset(self::FIELDS[$section]))return $this->saveContent($request,$section);
   if($action==='delete'&&in_array($section,['event','page','post','menu','lead'])){Content::where('type',$section)->findOrFail($request->integer('id'))->delete();return back()->with('flash','Đã xóa.');}

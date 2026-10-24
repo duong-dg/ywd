@@ -1,0 +1,1 @@
+<?php foreach($customAssets as $asset):if($asset['kind']==='css'):?><link rel="stylesheet" href="<?=e(custom_asset_url($asset))?>"><?php elseif($asset['placement']==='head'):?><script src="<?=e(custom_asset_url($asset))?>" defer></script><?php endif;endforeach;?>
